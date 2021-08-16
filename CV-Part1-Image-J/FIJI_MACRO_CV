@@ -1,0 +1,42 @@
+dir = getDirectory("image");
+name = File.getName(dir); 
+imageName = getTitle()
+//run("Brightness/Contrast...");
+run("Enhance Contrast", "saturated=0.35");
+run("Duplicate...", " ");
+run("Gaussian Blur...", "sigma=2");
+setAutoThreshold("Default dark");
+//run("Threshold...");
+//setThreshold(12, 255);
+setOption("BlackBackground", false);
+run("Convert to Mask");
+run("Fill Holes");
+run("Dilate");
+run("Watershed");
+run("Analyze Particles...", "size=50-Infinity exclude add");
+selectWindow(imageName);
+n = roiManager("count");
+for (i = 0; i < n; i++) {
+    roiManager("select", i);
+    title = getTitle;
+    run("Duplicate...", " ");
+    setBackgroundColor(0, 0, 0);
+    run("Clear Outside");
+    roiManager("Show All with labels");
+    roiManager("Show All without labels");
+    roiManager("Show All");
+    roiManager("Show None");
+    saveAs(dir+imageName+"_"+(i+1)+".tif");
+    close();
+    
+}
+selectWindow(imageName);
+//run("Brightness/Contrast...");
+run("Enhance Contrast", "saturated=0.35");
+roiManager("Show All with labels");
+roiManager("Save", dir+imageName+"_"+"ROI"+".zip");
+wait(1000)
+run("Capture Screen");
+saveAs(dir+imageName+"_"+"Screenshot"+".jpg");
+close();
+run("Close All");
